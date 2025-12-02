@@ -289,9 +289,13 @@ class AIAnalyzer:
     """Use GPT-4 for intelligent document analysis"""
     
     def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key
-        if self.api_key:
+        # Load API key from settings if not provided
+        from config import settings
+        self.api_key = api_key or settings.openai_api_key
+        
+        if self.api_key and self.api_key != "your_openai_api_key_here":
             self.client = AsyncOpenAI(api_key=self.api_key)
+            logger.info("OpenAI client initialized successfully")
         else:
             self.client = None
             logger.warning("OpenAI API key not configured - AI analysis will be limited")
